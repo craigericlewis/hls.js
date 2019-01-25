@@ -540,7 +540,7 @@ class MP4Remuxer {
       }
     }
 
-    // compute mdat size, now that we
+    // compute mdat size, as we eventually filtered/added some samples
     let nbSamples = inputSamples.length;
     let mdatSize = 0;
     while (nbSamples--) {
