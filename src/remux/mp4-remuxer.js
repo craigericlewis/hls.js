@@ -433,11 +433,11 @@ class MP4Remuxer {
     const initPTS = this._initPTS;
     const rawMPEG = !track.isAAC && this.typeSupported.mpeg;
 
-    let offset,
-      mp4Sample,
+    let mp4Sample,
       fillFrame,
       mdat, moof,
       firstPTS, lastPTS,
+      offset = ( rawMPEG ? 0 : 8 ),
       inputSamples = track.samples,
       outputSamples = [],
       nextAudioPts = this.nextAudioPts;
@@ -588,15 +588,8 @@ class MP4Remuxer {
         // remember first PTS of our audioSamples
         firstPTS = pts;
         if (mdatSize > 0) {
-          // concatenate the audio data and construct the mdat in place
-          if (rawMPEG) {
-            offset = 0;
-          } else {
-            offset = 8;
-            mdatSize += 8;
-          }
           try {
-            mdat = new Uint8Array(mdatSize);
+            mdat = new Uint8Array(rawMPEG ? mdatSize : mdatSize + 8);
           } catch (err) {
             this.observer.trigger(Event.ERROR, { type: ErrorTypes.MUX_ERROR, details: ErrorDetails.REMUX_ALLOC_ERROR, fatal: false, bytes: mdatSize, reason: `fail allocating audio mdat ${mdatSize}` });
             return;
