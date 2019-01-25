@@ -395,7 +395,7 @@ describe('appendFrame', () => {
       length: 16
     });
     assert.equal(track.samples.length, 1);
-    assert.equal(track.len, 7);
+    assert.equal(track.samples[0].byteLength, 7);
   });
 
   it('should not append sample if `parseFrameHeader` fails', () => {
@@ -411,6 +411,5 @@ describe('appendFrame', () => {
 
     assert.equal(appendFrame(track, data, 0, 0, 0), undefined);
     assert.equal(track.samples.length, 0);
-    assert.equal(track.len, 0);
   });
 });
